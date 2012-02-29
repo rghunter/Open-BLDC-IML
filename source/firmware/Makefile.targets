@@ -1,0 +1,123 @@
+#
+# Open-BLDC - Open BrushLess DC Motor Controller
+# Copyright (c) 2009-2010 Piotr Esden-Tempski <piotr@esden.net>
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+# 3. The name of the author may not be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+# NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+# THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+
+COMMON_OBJECTS = src/exceptions.o \
+		 src/vector_table.o \
+		 driver/led.o
+
+OBJECTS = $(COMMON_OBJECTS)
+
+DEFAULT_TARGET = mc
+
+TARGETS = mc \
+	  test_blink \
+	  test_governor \
+	  test_32bit_tim \
+	  test_sys_tick \
+	  test_can \
+	  test_bemf
+
+#CP_IDLE_STRATEGY ?=
+#CP_ALIGNING_STRATEGY ?=
+CP_SPINUP_STRATEGY ?= soft_timer
+#CP_SPINNING_STRATEGY ?=
+#CP_ERROR_STRATEGY ?=
+COMMP_STRATEGY = hardware
+
+mc.PARAMS = CP_SPINUP_STRATEGY COMMP_STRATEGY
+
+mc.OBJECTS = \
+	src/mc_main.o \
+	driver/usart.o \
+	driver/sys_tick.o \
+	driver/bemf_hardware_detect.o \
+	driver/debug_pins.o \
+	driver/adc.o \
+	src/cpu_load_process.o \
+	src/pwm/pwm.o \
+	src/pwm/pwm_scheme_6step_h_pwm_l_on.o \
+	src/pwm/pwm_scheme_6step_h_on_l_pwm.o \
+	src/pwm/pwm_scheme_6step_pwm_on.o \
+	src/pwm/pwm_scheme_6step_on_pwm.o \
+	src/pwm/pwm_scheme_12step_pwm_on_pwm.o \
+	src/comm_tim.o \
+	src/gprot.o \
+	src/sensor_process.o \
+	src/comm_process_$(COMMP_STRATEGY).o \
+	src/cp_idle.o \
+	src/cp_aligning.o \
+	src/cp_spinup_$(CP_SPINUP_STRATEGY).o \
+	src/cp_spinning.o \
+	src/cp_error.o \
+	src/control_process.o
+
+OBJECTS += $(mc.OBJECTS)
+
+test_blink.OBJECTS = \
+	test/blink_main.o
+
+OBJECTS += $(test_blink.OBJECTS)
+
+test_governor.OBJECTS = \
+	test/governor_main.o \
+	driver/usart.o \
+	test/gprot_test_governor.o
+
+OBJECTS += $(test_governor.OBJECTS)
+
+test_32bit_tim.OBJECTS = \
+	test/32bit_tim_main.o \
+	driver/32bit_tim.o \
+	test/32bit_tim_ref_tim.o
+
+OBJECTS += $(test_32bit_tim.OBJECTS)
+
+test_sys_tick.OBJECTS = \
+	test/sys_tick_main.o \
+	driver/sys_tick.o
+
+OBJECTS += $(test_sys_tick.OBJECTS)
+
+test_debug_pins.OBJECTS = \
+	driver/debug_pins.o \
+	test/debug_pins_main.o
+
+OBJECTS += $(test_debug_pins.OBJECTS)
+
+test_can.OBJECTS = \
+	driver/sys_tick.o \
+	driver/can.o \
+	test/can_main.o
+
+OBJECTS += $(test_can.OBJECTS)
+
+test_bemf.OBJECTS = \
+	test/test_bemf.o \
+	#driver/bemf_hardware_detect.o \
+	driver/usart.o
+
+OBJECTS += $(test_bemf.OBJECTS)
