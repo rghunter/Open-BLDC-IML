@@ -104,7 +104,7 @@ int main(void)
 	while (true) {
 		run_cpu_load_process();
 
-		/*if(flag%1000000 == 0)
+		if(flag%1000000 == 0)
 		{
 			//gpc_send_string("Hello World, I am ALIVE\n", strlen("Hello World, I am ALIVE\n"));
 			DEBUG("HELLO WORLD\n");
@@ -113,7 +113,7 @@ int main(void)
 		else
 		{
 			flag++;
-		}*/
+		}
 		if (*comm_process_trigger) {
 			*comm_process_trigger = false;
 			run_comm_process();
