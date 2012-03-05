@@ -1,0 +1,1 @@
+In order to compile the qgov with serial you need to first build and install the qextHighSpeed serial library. See readme in that folder for realavant credits.
