@@ -26,6 +26,9 @@ struct sensors {
 	s16 battery_voltage;      /**< Supply rail voltage */
 	s16 current;	          /**< Global controller current */
 	s16 temp;                 /**< Powerstage temperature */
+	s16 A0;
+	s16 A1;
+	s16 A2;
 };
 
 extern struct sensors sensors;

@@ -111,6 +111,12 @@ void adc_init(void)
 				  ADC_SampleTime_239Cycles5);
 	ADC_InjectedChannelConfig(ADC1, ADC_CHANNEL_TEMP, 3,
 				  ADC_SampleTime_239Cycles5);
+	//ADC_InjectedChannelConfig(ADC1, ADC_CHANNEL_A0, 4,
+	//				ADC_SampleTime_239Cycles5);
+	/*ADC_InjectedChannelConfig(ADC1, ADC_CHANNEL_A1, 5,
+						ADC_SampleTime_239Cycles5);
+	ADC_InjectedChannelConfig(ADC1, ADC_CHANNEL_A2, 6,
+						ADC_SampleTime_239Cycles5);*/
 
         /* ADC1 injected external trigger configuration */
         ADC_ExternalTrigInjectedConvConfig(ADC1, ADC_ExternalTrigInjecConv_None);
@@ -153,6 +159,13 @@ void adc1_2_irq_handler(void)
 		ADC_GetInjectedConversionValue(ADC1, ADC_CURRENT);
 	adc_data.temp =
 		ADC_GetInjectedConversionValue(ADC1, ADC_TEMP);
+//	adc_data.A0 =
+	//		ADC_GetInjectedConversionValue(ADC1, ADC_A0);
+	/*adc_data.A1 =
+			ADC_GetInjectedConversionValue(ADC1, ADC_A1);
+	adc_data.A2 =
+			ADC_GetInjectedConversionValue(ADC1, ADC_A2);*/
+
 
 	adc_data.trigger = true;
 }

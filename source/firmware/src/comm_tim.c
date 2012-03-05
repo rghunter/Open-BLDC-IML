@@ -202,7 +202,7 @@ void comm_tim_update_capture_and_time(void)
  */
 void tim2_irq_handler(void)
 {
-	TOGGLE(LED_BLUE);
+	TOGGLE(LED_GREEN);
 
 	if (TIM_GetITStatus(TIM2, TIM_IT_CC1) != RESET) {
 		TIM_ClearITPendingBit(TIM2, TIM_IT_CC1);

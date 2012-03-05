@@ -30,7 +30,9 @@ SOURCES += main.cpp \
     governorftdi.cpp \
     govconfig.cpp \
     targetwidgetfactory.cpp \
-    log.cpp
+    log.cpp \
+    governorserial.cpp \
+    serialselect.cpp
 HEADERS += mainwindow.h \
     connectdialog.h \
     governormaster.h \
@@ -46,10 +48,13 @@ HEADERS += mainwindow.h \
     govconfigspinbox.h \
     govconfigslider.h \
     govconfigcheckbox.h \
-    log.h
+    log.h \
+    governorserial.h \
+    serialselect.h
 FORMS += mainwindow.ui \
     connectdialog.ui \
-    simulator.ui
+    simulator.ui \
+    serialselect.ui
 macx { 
     LIBS += -L/opt/local/lib \
         -L/opt/mine/lib
@@ -66,6 +71,7 @@ INCLUDEPATH += ../utils/yamlgen/include \
 
 LIBS += -lgovernor \
     -lftdi \
+    -lqextserialport \
     -lusb \
     -lyaml \
     -lyamlgen \

@@ -38,16 +38,23 @@ typedef int64_t s64;
 
 #define NULL ((void *)0)
 
-#define DEBUG(STR) gpc_send_string(STR,strlen(STR));
+//#define DEBUG_ON
 
+#ifdef DEBUG_ON
+#define DEBUG(STR) gpc_send_string(STR,strlen(STR));
 #define ERRORF(STR, ARGS...) \
 		char buffer[50]; \
 		sprintf(buffer, STR, ARGS); \
 		gpc_send_string(buffer, 50); \
 		while(gpc_not_empty());
-
 #define ERROR(STR) \
 		gpc_send_string(STR, strlen(STR)); \
 		while(gpc_not_empty());
+#else
+#define DEBUG(STR)
+#define ERRORF(STR, ARGS...)
+#define ERROR(STR)
+#endif
+
 
 #endif /* __TYPES_H */

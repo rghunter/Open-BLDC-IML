@@ -43,6 +43,10 @@
 
 volatile bool *comm_process_trigger;
 
+volatile u16 *comm_time_freq;
+
+volatile int com_debug_output;
+
 /**
  * Internal state of the comm process struct.
  */
@@ -86,7 +90,11 @@ void comm_process_init(void)
 		      &(comm_params.direct_cutoff));
 	gpc_setup_reg(GPROT_COMM_TIM_IIR_POLE_REG_ADDR, &(comm_params.iir));
 
+	com_debug_output = 0;
+
 	comm_process_trigger = &bemf_hd_data.trigger;
+
+	comm_time_freq = &comm_tim_data.freq;
 
 	comm_process_state.rising = true;
 	comm_process_state.closed_loop = false;
@@ -172,7 +180,14 @@ void run_comm_process(void)
 
 	if (comm_process_time_valid()) {
 		comm_tim_data.freq = big_new_freq;
-		(void)gpc_register_touched(GPROT_COMM_TIM_FREQ_REG_ADDR);
+		if(com_debug_output == 5)
+		{
+			com_debug_output = 0;
+			(void)gpc_register_touched(GPROT_COMM_TIM_FREQ_REG_ADDR);
+		}else
+		{
+			com_debug_output++;
+		}
 
 		comm_tim_update_freq();
 
@@ -197,7 +212,7 @@ bool comm_process_time_valid(void) {
 	if ((comm_tim_data.update_count > 1) ||
 		((comm_tim_data.update_count == 1) &&
 			(comm_tim_data.curr_time > comm_tim_data.prev_time))) {
-		DEBUG("Not Enough Updates, FAIL\n");
+		//DEBUG("Not Enough Updates, FAIL\n");
 		return false;
 	}
 
@@ -207,7 +222,7 @@ bool comm_process_time_valid(void) {
 	 */
 	if ((comm_tim_data.curr_time -
 			comm_tim_data.prev_time) > (65535- 1000)) {
-		DEBUG("EDGE TIMER FAIL\n");
+		//DEBUG("EDGE TIMER FAIL\n");
 		return false;
 	}
 

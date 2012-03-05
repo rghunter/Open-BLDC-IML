@@ -31,6 +31,8 @@
 #include "connectdialog.h"
 #include "governorsimulator.h"
 #include "governorftdi.h"
+#include "governorserial.h"
+#include "serialselect.h"
 
 #include "govconfig.h"
 
@@ -53,6 +55,7 @@ private:
     Ui::MainWindow *ui;
 
     ConnectDialog *connectDialog;
+    serialSelect *SerialSelect;
     QIODevice *governorInterface;
     RegisterModel registerModel;
     ProtocolModel outputModel;

@@ -24,6 +24,8 @@
 
 extern volatile bool *comm_process_trigger;
 
+extern volatile u16 * comm_time_freq;
+
 /**
  * Commutation control process output data
  */

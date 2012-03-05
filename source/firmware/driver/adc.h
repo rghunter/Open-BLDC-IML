@@ -26,10 +26,16 @@
 #define ADC_CHANNEL_BATTERY_VOLTAGE ADC_Channel_3
 #define ADC_CHANNEL_CURRENT ADC_Channel_4
 #define ADC_CHANNEL_TEMP ADC_Channel_5
+#define ADC_CHANNEL_A0 ADC_Channel_0
+#define ADC_CHANNEL_A1 ADC_Channel_1
+#define ADC_CHANNEL_A2 ADC_Channel_2
 
 #define ADC_BATTERY_VOLTAGE ADC_InjectedChannel_1
 #define ADC_CURRENT ADC_InjectedChannel_2
 #define ADC_TEMP ADC_InjectedChannel_3
+#define ADC_A0 ADC_InjectedChannel_4
+#define ADC_A1 ADC_InjectedChannel_5
+#define ADC_A2 ADC_InjectedChannel_6
 /** @} */
 
 /**
@@ -40,6 +46,9 @@ struct adc_data {
 	u16 battery_voltage; /**< Raw half battery voltage value */
 	u16 current; /**< Raw global current value */
 	u16 temp; /**< RAW temperature measurement */
+	u16 A0;
+	u16 A1;
+	u16 A2;
 };
 
 extern struct adc_data adc_data;

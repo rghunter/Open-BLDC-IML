@@ -49,6 +49,7 @@
 #include "comm_process.h"
 #include "sensor_process.h"
 #include "control_process.h"
+#include <math.h>
 
 /**
  * Running in demo mode flag
@@ -101,6 +102,8 @@ int main(void)
 	demo = false;
 	int flag = 0;
 
+	int neg_pwm, pos_pwm;
+
 	while (true) {
 		run_cpu_load_process();
 
@@ -128,7 +131,31 @@ int main(void)
 
 		//TOGGLE(LED_BLUE);
 
-		if (demo) {
+		if(demo) {
+			if(pwm_val < 11500)
+			{
+				pwm_val++;
+			}
+			else
+			{
+				if(*comm_time_freq > 3450)
+				{
+					ON(LED_BLUE);
+
+					PWM_SET(abs(pwm_val));
+				}
+				else if(*comm_time_freq < 2400)
+				{
+					ON(LED_BLUE);
+					PWM_SET(abs(pwm_val)*-1);
+				}else
+				{
+					OFF(LED_BLUE);
+				}
+			}
+		}
+
+/*		if (demo) {
 			if (demo_counter == 0) {
 				demo_counter = 300;
 				pwm_val += demo_dir;
@@ -142,6 +169,6 @@ int main(void)
 			} else {
 				demo_counter--;
 			}
-		}
+		}*/
 	}
 }

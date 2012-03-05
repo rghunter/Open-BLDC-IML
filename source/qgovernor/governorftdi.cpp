@@ -21,11 +21,12 @@ void GovernorFtdiReadThread::run()
         if((ret = ftdi_read_data(ftdic, &data, 1)) > 0){
             mutex.lock();
             buffer.append(data);
+            int test = buffer.size();
             if(buffer.size() <= 1)
                 emit readyRead();
             mutex.unlock();
         }else{
-            usleep(200);
+            usleep(100);
         }
     }
 }
@@ -80,7 +81,7 @@ bool GovernorFtdi::open(OpenMode mode)
         return false;
     }
 
-    ret = ftdi_set_baudrate(&ftdic, 230400);
+    ret = ftdi_set_baudrate(&ftdic, 115200);//230400);
     if(ret < 0){
         qDebug("Error: unable to set baudrate: %d (%s)", ret, ftdi_get_error_string(&ftdic));
         return false;

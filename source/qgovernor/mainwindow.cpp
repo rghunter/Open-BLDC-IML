@@ -71,6 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     /* Dialog initialization */
     connectDialog = new ConnectDialog(this);
+    SerialSelect = new serialSelect(this);
 
     /* Actions */
     updateRegister = new QAction(tr("Update"), this);
@@ -130,11 +131,7 @@ void MainWindow::on_registerChanged(unsigned char addr)
         break;
     case GPROT_COMM_TIM_FREQ_REG_ADDR:
         ui->forcedCommTimValSpinBox->setValue(governorMaster->getRegisterMapValue(addr));
-        ui->RPMValueLabel->setText(QString("%1RPM").arg(60.0 /
-                                                        ((1.0/(32000000.0/4.0)) *
-                                                         6.0 *
-                                                         7.0 *
-                                                         governorMaster->getRegisterMapValue(addr)),
+        ui->RPMValueLabel->setText(QString("%1RPM").arg(60.0 / ((1.0/(48000000.0/4.0)) * 6.0 * 12.0 * governorMaster->getRegisterMapValue(addr)),
                                                         8,
                                                         'f',
                                                         2,
@@ -302,6 +299,11 @@ void MainWindow::on_actionConnect_triggered(bool checked)
             case 1:
                 governorInterface = new GovernorFtdi(this);
                 break;
+            case 2:
+                SerialSelect->exec();
+                governorInterface = new GovernorSerial(this, SerialSelect->getPort());
+                break;
+
             }
 
             if(governorInterface->open(QIODevice::ReadWrite)){

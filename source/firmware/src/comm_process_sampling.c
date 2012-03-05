@@ -41,6 +41,7 @@
 #include "sensor_process.h"
 
 volatile bool *comm_process_trigger;
+volatile u16 *comm_time_freq;
 
 /**
  * Internal state of the comm process struct.
@@ -78,6 +79,7 @@ s32 new_cycle_time;				        /**< New commutation time
 void comm_process_init(void)
 {
 	comm_process_trigger = &adc_new_data_trigger;
+	comm_time_freq = &comm_tim_data.freq;
 
 	(void)gpc_setup_reg(GPROT_COMM_TIM_SPARK_ADVANCE_REG_ADDR,
 			    (u16 *) & (comm_params.spark_advance));

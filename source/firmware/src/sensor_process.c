@@ -71,6 +71,18 @@ struct sensor_params {
 		s32 offset; /**< Zero temperature offset value */
 		u32 iir;	 /**< IIR filter value */
 	} t;
+	struct A0 {
+		s32 offset; /**< Zero A0 offset value */
+		u32 iir;	 /**< IIR filter value */
+	} A0;
+	struct A1 {
+			s32 offset; /**< Zero A1 offset value */
+			u32 iir;	 /**< IIR filter value */
+	} A1;
+	struct A2 {
+			s32 offset; /**< Zero A2 offset value */
+			u32 iir;	 /**< IIR filter value */
+	} A2;
 };
 
 /**
@@ -113,6 +125,13 @@ void sensor_process_init(void)
 			    (u16 *) & (sensors.current));
 	(void)gpc_setup_reg(GPROT_ADC_TEMPERATURE_REG_ADDR,
 			    (u16 *) & (sensors.temp));
+	//(void)gpc_setup_reg(GPROT_ADC_A0_REG_ADDR,
+	//		    (u16 *) & (sensors.A0));
+	/*(void)gpc_setup_reg(GPROT_ADC_A1_ADDR,
+			    (u16 *) & (sensors.A1));
+	(void)gpc_setup_reg(GPROT_ADC_A2_REG_ADDR,
+			    (u16 *) & (sensors.A2));*/
+
 
 	sensor_process_trigger = &adc_data.trigger;
 
@@ -123,9 +142,15 @@ void sensor_process_init(void)
 	sensor_params.bv.offset = 0;
 	sensor_params.bv.iir = 20;
 	sensor_params.c.offset = 0;
-	sensor_params.c.iir = 20;
+	sensor_params.c.iir = 15;
 	sensor_params.t.offset = 0;
 	sensor_params.t.iir = 20;
+	sensor_params.A0.offset = 0;
+	sensor_params.A0.iir = 20;
+	sensor_params.A1.offset = 0;
+	sensor_params.A1.iir = 20;
+	sensor_params.A2.offset = 0;
+	sensor_params.A2.iir = 20;
 
 	sensor_trigger_debug_output = 0;
 }
@@ -138,6 +163,9 @@ void sensor_process_reset(void)
 	sensors.battery_voltage = 0;
 	sensors.current = 0;
 	sensors.temp = 0;
+	sensors.A0 = 0;
+	sensors.A1 = 0;
+	sensors.A2 = 0;
 }
 
 /**
@@ -151,8 +179,11 @@ void run_sensor_process(void)
 	u16 battery_voltage = adc_data.battery_voltage;
 	u16 current = adc_data.current;
 	u16 temp = adc_data.temp;
+	u16 A0 = adc_data.A0;
+	u16 A1 = adc_data.A1;
+	u16 A2 = adc_data.A2;
 
-	//TOGGLE(LED_RED);
+	TOGGLE(LED_RED);
 	/* Calculate battery voltage */
 	sensors.battery_voltage =
 		SENSOR_OFFSET_IIR(sensors.battery_voltage, battery_voltage,
@@ -171,11 +202,29 @@ void run_sensor_process(void)
 				sensor_params.t.offset,
 				sensor_params.t.iir);
 
+	sensors.A0 =
+		SENSOR_OFFSET_IIR(sensors.A0, A0,
+				sensor_params.A0.offset,
+				sensor_params.A0.iir);
+
+/*	sensors.A1 =
+		SENSOR_OFFSET_IIR(sensors.A1, A1,
+				sensor_params.A1.offset,
+				sensor_params.A1.iir);
+
+	sensors.A2 =
+		SENSOR_OFFSET_IIR(sensors.A2, A2,
+				sensor_params.A2.offset,
+				sensor_params.A2.iir);*/
+
 	if (sensor_trigger_debug_output == 10) {
 		sensor_trigger_debug_output = 0;
 		(void)gpc_register_touched(GPROT_ADC_BATTERY_VOLTAGE_REG_ADDR);
 		(void)gpc_register_touched(GPROT_ADC_CURRENT_REG_ADDR);
 		(void)gpc_register_touched(GPROT_ADC_TEMPERATURE_REG_ADDR);
+	//	(void)gpc_register_touched(GPROT_ADC_A0_REG_ADDR);
+	//	(void)gpc_register_touched(GPROT_ADC_A1_REG_ADDR);
+	//	(void)gpc_register_touched(GPROT_ADC_A2_REG_ADDR);
 	} else {
 		sensor_trigger_debug_output++;
 	}
